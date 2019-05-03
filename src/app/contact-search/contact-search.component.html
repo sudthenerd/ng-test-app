@@ -9,7 +9,7 @@
                 <span class="badge badge-dark" (click)="clearSelection(contactInfo, index)">X</span>
                 <span class="sr-only">unread messages</span>
               </button>
-              <textarea 
+              <textarea #controlRef
                 class="col border-none"
                 placeholder="Start search from @" 
                 formControlName="contactSearch" 

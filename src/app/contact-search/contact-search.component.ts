@@ -22,6 +22,7 @@ export class ContactSearchComponent implements OnInit {
   public selectedContactsInfo: any[];
 
   @ViewChild('listWrapper') public listWrapper: ElementRef;
+  @ViewChild('controlRef') public controlRef: ElementRef;
 
   constructor( private formBuilder: FormBuilder) {
     this.initContactSearchForm();
@@ -50,20 +51,19 @@ export class ContactSearchComponent implements OnInit {
       const searchText: string = controlValue.split('@')[1];
 
       let contactFound: boolean;
+      let matchedIndex: number;
       const matchedContact: any = this.contactList.find((contactInfo: any, index: number) => {
         contactFound =  contactInfo.name === searchText;
 
         if (contactFound) {
-          this.contactSearchForm.controls.contactSearch.setValue(null);
-          this.contactList.splice(index, 1);
-          this.filteredContactList = [];
+          matchedIndex = index;
         }
 
         return contactFound;
       });
 
       if (contactFound) {
-        this.updateSelectedContacts(matchedContact);
+        this.updateSelectedContacts(matchedContact, matchedIndex);
         return;
       }
 
@@ -107,13 +107,15 @@ export class ContactSearchComponent implements OnInit {
   }
 
   public selectContact(contactInfo) {
-    this.updateSelectedContacts(contactInfo);
-    this.filteredContactList = [];
+    this.updateSelectedContacts(contactInfo, contactInfo.index);
+    this.controlRef.nativeElement.focus();
   }
 
-  private updateSelectedContacts(contactInfo): void {
+  private updateSelectedContacts(contactInfo: any, index: number): void {
     this.selectedContactsInfo.push(contactInfo);
-    this.selectedContactsInfo = [...this.selectedContactsInfo];
     this.contactSearchForm.controls.contactSearch.setValue(null);
+
+    this.contactList.splice(index, 1);
+    this.filteredContactList = [];
   }
 }
