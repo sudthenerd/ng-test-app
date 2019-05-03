@@ -6,5 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  // https://drive.google.com/file/d/1RKqL2EaWvYXFT_FQcCm6zKl3QIb1rKxv/view
+  // https://drive.google.com/file/d/1RKqL2EaWvYXFT_FQcCm6zKl3QIb1rKxv/view
   title = 'ng-test-app';
 }
