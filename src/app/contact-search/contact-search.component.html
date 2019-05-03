@@ -3,20 +3,27 @@
         <div class="d-flex flex-column">
           <div class="form-group">
             <h5>Search Contact</h5>
-            <div class="text-area-wrapper">
+            <div class="text-area-wrapper p-2 rounded">
               <button type="button" class="btn btn-light m-2" *ngFor="let contactInfo of selectedContactsInfo;let index = index">
                 {{ contactInfo.name }}
                 <span class="badge badge-dark" (click)="clearSelection(contactInfo, index)">X</span>
                 <span class="sr-only">unread messages</span>
               </button>
-              <textarea #controlRef
+              <input 
+                placeholder="Start search from @" 
+                type="text" 
+                #controlRef 
+                formControlName="contactSearch"
+                (keyup)="onKeyUp()"
+                (keydown.arrowdown)="moveDown($event)">
+              <!-- <textarea #controlRef
                 class="col border-none"
                 placeholder="Start search from @" 
                 formControlName="contactSearch" 
                 rows="3" 
                 (keyup)="onKeyUp()"
                 (keydown.arrowdown)="moveDown($event)">
-              </textarea>
+              </textarea> -->
             </div>
           </div>
           <ul class="list-group" #listWrapper>

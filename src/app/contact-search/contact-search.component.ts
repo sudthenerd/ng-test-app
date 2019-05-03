@@ -26,7 +26,18 @@ export class ContactSearchComponent implements OnInit {
 
   constructor( private formBuilder: FormBuilder) {
     this.initContactSearchForm();
-    this.contactList = [{index: 0, name: 'ram'}, {index: 1, name: 'shyam'}, {index: 2, name: 'sushil'}, {index: 2, name: 'sushil1'}];
+    this.contactList = [
+      {index: 0, name: 'ram'},
+      {index: 1, name: 'shyam'},
+      {index: 2, name: 'sushil'},
+      {index: 3, name: 'sushil1'},
+      {index: 4, name: 'sushil2'},
+      {index: 5, name: 'sushil3'},
+      {index: 6, name: 'sushil4'},
+      {index: 7, name: 'ram4'},
+      {index: 8, name: 'ram4'},
+      {index: 9, name: '4ram1'}
+    ];
     this.filteredContactList = [];
     this.selectedContactsInfo = [];
     this.showList = true;
@@ -47,8 +58,9 @@ export class ContactSearchComponent implements OnInit {
   public onKeyUp() {
     const controlValue: string = this.contactSearchForm.value.contactSearch;
 
-    if (controlValue && controlValue[0] === '@') {
-      const searchText: string = controlValue.split('@')[1];
+    if (controlValue.indexOf('@') >= 0) {
+      const searchIndex: number = controlValue.indexOf('@');
+      const searchText: string = controlValue.substr(searchIndex + 1);
 
       let contactFound: boolean;
       let matchedIndex: number;
@@ -81,7 +93,7 @@ export class ContactSearchComponent implements OnInit {
   }
 
   public moveDown(event: any) {
-    if (event.target.nodeName.toLowerCase() === 'textarea') {
+    if (event.target === this.controlRef.nativeElement) {
       const listItems = this.listWrapper.nativeElement.getElementsByTagName('li');
       listItems[0].classList.add('active');
       listItems[0].focus();
@@ -115,7 +127,10 @@ export class ContactSearchComponent implements OnInit {
     this.selectedContactsInfo.push(contactInfo);
     this.contactSearchForm.controls.contactSearch.setValue(null);
 
-    this.contactList.splice(index, 1);
+    const idx = this.contactList.findIndex((item: any) => {
+      return item.index === index;
+    });
+    this.contactList.splice(idx, 1);
     this.filteredContactList = [];
   }
 }
