@@ -1,0 +1,22 @@
+/* You can add global styles to this file, and also import other style files */
+.text-area-wrapper {
+    color: #495057;
+    background-color: #fff;
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
+textarea {
+    outline: none;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.form-control:focus {
+    color: #fff;
+    background-color: #fff;
+    border: none;
+    outline: 0;
+    box-shadow: none;
+}

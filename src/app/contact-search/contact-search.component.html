@@ -1,0 +1,35 @@
+<div class="d-flex justify-content-center p-5">
+    <form [formGroup]="contactSearchForm" class="col-8">
+        <div class="d-flex flex-column">
+          <div class="form-group">
+            <h5>Search Contact</h5>
+            <div class="text-area-wrapper">
+              <button type="button" class="btn btn-light m-2" *ngFor="let contactInfo of selectedContactsInfo;let index = index">
+                {{ contactInfo.name }}
+                <span class="badge badge-dark" (click)="clearSelection(contactInfo, index)">X</span>
+                <span class="sr-only">unread messages</span>
+              </button>
+              <textarea 
+                class="col border-none"
+                placeholder="Start search from @" 
+                formControlName="contactSearch" 
+                rows="3" 
+                (keyup)="onKeyUp()"
+                (keydown.arrowdown)="moveDown($event)">
+              </textarea>
+            </div>
+          </div>
+          <ul class="list-group" #listWrapper>
+            <li 
+              class="list-group-item" 
+              tabindex="1" 
+              *ngFor="let contactInfo of filteredContactList; let index = index" 
+              (keydown.arrowdown)="moveDown($event)" 
+              (keyup.enter)="selectContact(contactInfo)"
+              (keydown.arrowup)="moveUp($event)">
+              {{contactInfo.name}}
+            </li>
+          </ul>
+        </div>
+      </form>
+</div>
