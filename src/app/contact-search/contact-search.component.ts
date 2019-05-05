@@ -19,7 +19,7 @@ export class ContactSearchComponent implements OnInit {
 
   public showList: boolean;
   public showChip: boolean;
-  public selectedContactsInfo: any[];
+  public selectedContactsInfo: { index: number, name: string, extraText: string }[];
 
   @ViewChild('listWrapper') public listWrapper: ElementRef;
   @ViewChild('controlRef') public controlRef: ElementRef;
@@ -58,6 +58,11 @@ export class ContactSearchComponent implements OnInit {
   public onKeyUp() {
     const controlValue: string = this.contactSearchForm.value.contactSearch;
 
+    if (!controlValue) {
+      this.filteredContactList = [];
+      return;
+    }
+
     if (controlValue.indexOf('@') >= 0) {
       const searchIndex: number = controlValue.indexOf('@');
       const searchText: string = controlValue.substr(searchIndex + 1);
@@ -79,24 +84,33 @@ export class ContactSearchComponent implements OnInit {
         return;
       }
 
-      this.filteredContactList = searchText.length && this.contactList.filter((contactInfo: any, index: number) => {
+      this.filteredContactList = this.contactList.filter((contactInfo: any, index: number) => {
         return contactInfo.name.includes(searchText);
       });
     }
 
     this.filteredContactList = (this.filteredContactList && this.filteredContactList.length) ? this.filteredContactList : [];
+    if (this.filteredContactList && this.filteredContactList.length) {
+      this.activeItem(0);
+    }
   }
 
-  public clearSelection(contactInfo: any, index) {
-    this.selectedContactsInfo.splice(index, 1);
-    this.contactList.splice(contactInfo.index, 0, contactInfo);
+  public clearSelection(event: any) {
+    if (event.target.value) {
+      return;
+    }
+
+    const lastItem: any = this.selectedContactsInfo.splice(-1, 1)[0];
+    const extraText: string = lastItem.extraText;
+    this.contactSearchForm.controls.contactSearch.setValue(extraText);
+    const contactInfo = { index: lastItem.index, name: lastItem.name };
+    this.contactList.splice(lastItem.index, 0, contactInfo);
   }
 
   public moveDown(event: any) {
     if (event.target === this.controlRef.nativeElement) {
-      const listItems = this.listWrapper.nativeElement.getElementsByTagName('li');
-      listItems[0].classList.add('active');
-      listItems[0].focus();
+      this.activeItem(0);
+      this.setFocusOnItem(0);
     } else {
       event.target.nextElementSibling.classList.add('active');
       event.target.classList.remove('active');
@@ -124,7 +138,7 @@ export class ContactSearchComponent implements OnInit {
   }
 
   private updateSelectedContacts(contactInfo: any, index: number): void {
-    this.selectedContactsInfo.push(contactInfo);
+    this.selectedContactsInfo.push(this.filterExtraText(contactInfo));
     this.contactSearchForm.controls.contactSearch.setValue(null);
 
     const idx = this.contactList.findIndex((item: any) => {
@@ -132,5 +146,19 @@ export class ContactSearchComponent implements OnInit {
     });
     this.contactList.splice(idx, 1);
     this.filteredContactList = [];
+  }
+
+  private filterExtraText(matchedContactInfo) {
+    const extraText: string = this.contactSearchForm.value.contactSearch.split('@')[0];
+    matchedContactInfo.extraText = extraText;
+    return matchedContactInfo;
+  }
+
+  private activeItem(index) {
+    this.listWrapper.nativeElement.getElementsByTagName('li')[index].classList.add('active');
+  }
+
+  private setFocusOnItem(index) {
+    this.listWrapper.nativeElement.getElementsByTagName('li')[index].focus();
   }
 }
