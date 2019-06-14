@@ -1,2 +1,2 @@
-# ng-test-app
+# ng-contact-search-app
 Angular App which select contact and show selected contact in chip form. Search should start typing with @.
